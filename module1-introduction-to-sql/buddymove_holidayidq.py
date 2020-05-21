@@ -12,30 +12,35 @@ print(df.head())
 
 
 connection = sqlite3.connect("buddymove_holidayiq.sqlite3")
+connection.row_factory = sqlite3.Row
 cursor = connection.cursor()
 
 
 df.to_sql('review', connection, index=False, if_exists='replace')
 
 
-cursor.execute("""SELECT * FROM review;""")
+cursor.execute("""SELECT * FROM review LIMIT 5;""")
 
 for row in cursor.fetchall():
-    print(row)
+    print(dict(row))
 print("\n")
 
-cursor.execute("""SELECT COUNT(*)
+
+cursor.execute("""SELECT COUNT(*) AS USERS
              FROM review""")
-print(f"Count total users: {cursor.fetchall()[0][0]}\n")
+
+print(dict(cursor.fetchall()[0]))
+print("\n")
 
 
 cursor.execute("""
-            SELECT COUNT(*)
+            SELECT COUNT(*) AS Nature_And_Shoppers_Over_100
             FROM review
             WHERE Nature>=100 and Shopping>=100;
         """)
 
-print(f"Count Nature and Shopping >=100: {cursor.fetchall()[0][0]}\n")
+print(dict(cursor.fetchall()[0]))
+print("\n")
 
 
 cursor.execute("""
@@ -47,7 +52,7 @@ cursor.execute("""
                 ,AVG(Shopping) as Shopping_AVG
                 ,AVG(Picnic) as Picnic_AVG
             FROM review;
-""")
+        """)
 
 
 for row in cursor.fetchall():

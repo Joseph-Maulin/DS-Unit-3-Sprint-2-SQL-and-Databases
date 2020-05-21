@@ -1,7 +1,7 @@
 import sqlite3
 
 connection = sqlite3.connect("rpg_db.sqlite3")
-# connection.row_factory = sqlite3.Row
+connection.row_factory = sqlite3.Row
 
 cursor = connection.cursor()
 
@@ -12,7 +12,8 @@ cursor.execute("""
             """)
 
 
-print(f"Character Count: {cursor.fetchall()[0][0]}")
+
+print(dict(cursor.fetchall()[0]))
 
 
 cursor.execute("""
@@ -32,7 +33,7 @@ cursor.execute("""
             """)
 
 
-print(f"Character Count Per Class: {cursor.fetchall()[0]}")
+print(dict(cursor.fetchall()[0]))
 
 
 connection.close()
