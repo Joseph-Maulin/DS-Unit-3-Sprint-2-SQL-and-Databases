@@ -1,5 +1,5 @@
 import psycopg2
-from psycopg2.extras import DictCursor
+from psycopg2.extras import DictCursor, execute_values
 from dotenv import load_dotenv
 import os
 import json
@@ -30,8 +30,11 @@ for row in cur.fetchall():
 
 my_dict = {"hello":2}
 
-insertion_query = "INSERT INTO test_table (name, data) VALUES (%s, %s)"
-cur.execute(insertion_query, ("Test", json.dumps(my_dict)))
+insertion_query = "INSERT INTO test_table (name, data) VALUES %s"
+execute_values(cur, insertion_query, [
+("Test1", json.dumps(my_dict)),
+("Test2", 'null')
+])
 
 conn.commit()
 
