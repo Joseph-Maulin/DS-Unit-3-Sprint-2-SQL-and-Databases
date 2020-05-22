@@ -1,6 +1,8 @@
 import psycopg2
+from psycopg2.extras import DictCursor
 from dotenv import load_dotenv
 import os
+import json
 
 
 load_dotenv()
@@ -15,10 +17,29 @@ conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER,
 
 
 
-cur = conn.cursor()
+cur = conn.cursor(cursor_factory=DictCursor)
+
+
 
 cur.execute('SELECT * from test_table;')
 
 
 for row in cur.fetchall():
     print(row)
+
+
+my_dict = {"hello":2}
+
+insertion_query = "INSERT INTO test_table (name, data) VALUES (%s, %s)"
+cur.execute(insertion_query, ("Test", json.dumps(my_dict)))
+
+conn.commit()
+
+cur.execute('SELECT * from test_table;')
+
+
+for row in cur.fetchall():
+    print(row)
+
+cur.close()
+conn.close()
