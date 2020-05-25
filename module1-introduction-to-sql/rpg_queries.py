@@ -36,4 +36,48 @@ cursor.execute("""
 print(dict(cursor.fetchall()[0]))
 
 
+cursor.execute("""
+                SELECT COUNT(item_id) AS item_count
+                FROM armory_item;
+              """)
+
+print(dict(cursor.fetchall()[0]))
+
+
+cursor.execute("""
+                SELECT COUNT(item_ptr_id) AS weapon_count
+                FROM armory_weapon;
+                """)
+
+print(dict(cursor.fetchall()[0]))
+
+cursor.execute("""
+                SELECT COUNT(item_id) - COUNT(item_ptr_id) AS not_weapons FROM
+                armory_item
+                LEFT JOIN armory_weapon
+                ON armory_weapon.item_ptr_id = armory_item.item_id;
+                """)
+
+print(dict(cursor.fetchall()[0]))
+
+cursor.execute("""
+                SELECT charactercreator_character_inventory.character_id, COUNT(charactercreator_character_inventory.item_id) AS item_count FROM charactercreator_character_inventory
+                JOIN armory_item
+                ON charactercreator_character_inventory.item_id = armory_item.item_id
+                GROUP BY character_id
+                LIMIT 20;
+                """)
+print(dict(cursor.fetchall()[0:20]))
+
+cursor.execute("""
+                SELECT charactercreator_character_inventory.character_id, COUNT(charactercreator_character_inventory.item_id) AS item_count FROM charactercreator_character_inventory
+                JOIN armory_weapon
+                ON charactercreator_character_inventory.item_id = armory_weapon.item_ptr_id
+                GROUP BY character_id
+                LIMIT 20;
+                """)
+print(dict(cursor.fetchall()[0:20]))
+
+
+
 connection.close()
