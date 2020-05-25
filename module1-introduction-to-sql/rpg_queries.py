@@ -78,6 +78,14 @@ cursor.execute("""
                 """)
 print(dict(cursor.fetchall()[0:20]))
 
+cursor.execute("""
+                SELECT AVG(count) AS inventory_avg_items
+                FROM
+                (SELECT COUNT(charactercreator_character_inventory.item_id) AS count
+                FROM charactercreator_character_inventory
+                GROUP BY charactercreator_character_inventory.character_id)
+                """)
 
+print(dict(cursor.fetchall()[0]))
 
 connection.close()
