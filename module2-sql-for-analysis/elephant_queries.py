@@ -44,5 +44,7 @@ cur.execute('SELECT * from test_table;')
 for row in cur.fetchall():
     print(row)
 
+
+
 cur.close()
 conn.close()
